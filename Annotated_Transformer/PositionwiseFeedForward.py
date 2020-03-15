@@ -7,12 +7,13 @@ class PositionwiseFeedForward(nn.Module):
         super(PositionwiseFeedForward, self).__init__()
         self.w_1 = nn.Linear(d_embedding, d_ff)
         self.w_2 = nn.Linear(d_ff, d_embedding)
+        self.relu = nn.ReLU()
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x):
         x = self.w_1(x)
         #print('shape after first linear layer: {}'.format(x.shape))
-        x = self.dropout(F.relu(x))
+        x = self.dropout(self.relu(x))
         x = self.w_2(x)
 
         return x
