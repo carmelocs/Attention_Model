@@ -1,3 +1,4 @@
+# this file contains all the functions for other classes
 import numpy as np
 import torch
 import torch.nn as nn
@@ -24,4 +25,3 @@ def attention(query, key, value, mask=None, dropout=None):
     scores = torch.matmul(attn, value)
 
     return scores, attn
-    
