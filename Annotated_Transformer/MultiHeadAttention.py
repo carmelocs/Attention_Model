@@ -42,7 +42,7 @@ if __name__=='__main__':
     EMBEDDING_DIM = 512  # Embedding Size
     DIM_FF = 2048 # FeedForward dimension
     DIM_Q = DIM_K = DIM_V = 64  # dimension of K(=Q), V
-    NUM_LAYER = 6  # number of Encoder of Decoder Layer
+    NUM_LAYER = 6  # number of Encoder and Decoder Layer
     NUM_HEAD = 8  # number of heads in Multi-Head Attention
     EXPECTED_MAX_NUM_WORD = 100 # ???
     BATCH_SIZE = 32
