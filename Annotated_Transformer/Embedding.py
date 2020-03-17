@@ -18,15 +18,16 @@ class PositionalEncoding(nn.Module):
         super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(p=dropout)
 
-        self.pe = torch.zeros(max_len, d_embedding) # Position Encoding (max_num_word, d_embedding)
-        self.position = torch.arange(0, max_len).unsqueeze(1)
+        # compute the Positional Encoding once in log space, DO NOT need to update
+        pe = torch.zeros(max_len, d_embedding) # Position Encoding (max_num_word, d_embedding)
+        position = torch.arange(0, max_len).unsqueeze(1)
         # unsqueeze(1) The size of tensor position must match the size of tensor div_term at non-singleton dimension 0
-        self.div_term = torch.exp(torch.arange(0, d_embedding, 2) * 
+        div_term = torch.exp(torch.arange(0, d_embedding, 2) * 
                                     -(math.log(10000) / d_embedding))
-        self.pe[:,0::2] = torch.sin(torch.mul(self.position, self.div_term))
-        self.pe[:,1::2] = torch.cos(torch.mul(self.position, self.div_term))
-        self.pe = self.pe.unsqueeze(0)
-        #self.register_buffer('pe', self.pe)
+        pe[:,0::2] = torch.sin(torch.mul(position, div_term))
+        pe[:,1::2] = torch.cos(torch.mul(position, div_term))
+        pe = pe.unsqueeze(0)
+        self.register_buffer('pe', pe)
 
     def forward(self, x):
         x = x + self.pe[:, :x.size(1)]
@@ -55,4 +56,4 @@ if __name__=='__main__':
     print('input shape after embedding: {}'.format(input_embedding.shape))
     posi = PositionalEncoding(EMBEDDING_DIM, 0.1)
     posi_encode = posi(input_embedding)
-    print('input shape after posi encoding: {}'.format(posi_encode.shape))
+    print('input shape after positional encoding: {}'.format(posi_encode.shape))
