@@ -16,14 +16,16 @@ class MultiHeadAttention(nn.Module):
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, query, key, value, mask=None):
-        # query, key, value (batch, num_word, d_embedding)
+        # query: (batch, num_query, d_embedding)
+        # key: (batch, num_key, d_embedding)
+        # value: (batch, num_value, d_embedding)
         if mask is not None:
             mask = mask.unsqueeze(1)
 
         batch_size = query.size(0)
 
         # linear projection for query, key and value from (batch, num_word, d_embedding)
-        #                                               to (batch, head, num_word, d_k)
+        #                                               to (batch, num_head, num_word, d_k)
         query = self.linears[0](query).view(batch_size, -1, self.head, self.d_k).transpose(1,2)
         key = self.linears[1](key).view(batch_size, -1, self.head, self.d_k).transpose(1,2)
         value = self.linears[2](value).view(batch_size, -1, self.head, self.d_k).transpose(1,2)
@@ -34,9 +36,7 @@ class MultiHeadAttention(nn.Module):
         # "Concatenate" heads and apply final linear (batch, heads, num_word, d_k)
         #                                            =>(batch, num_word, d_embedding)
         x = x.transpose(1,2).contiguous().view(batch_size, -1, self.head*self.d_k)
-        x = self.linears[-1](x)
-
-        return x
+        return self.linears[-1](x)
 
 if __name__=='__main__':
     EMBEDDING_DIM = 512  # Embedding Size
