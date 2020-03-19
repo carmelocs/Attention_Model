@@ -19,7 +19,7 @@ class MultiHeadAttention(nn.Module):
         # query: (batch, num_query, d_embedding)
         # key: (batch, num_key, d_embedding)
         # value: (batch, num_value, d_embedding)
-        if mask is not None:
+        if mask is not None: # Same padding mask applied to all h heads.
             mask = mask.unsqueeze(1)
 
         batch_size = query.size(0)
@@ -33,8 +33,8 @@ class MultiHeadAttention(nn.Module):
         # Scaled Dot-Product Attention for each batch (batch, heads, num_word, d_k)
         x, self.attn = attention(query, key, value, mask=mask, dropout=self.dropout)
 
-        # "Concatenate" heads and apply final linear (batch, heads, num_word, d_k)
-        #                                            =>(batch, num_word, d_embedding)
+        # "Concatenate" heads and apply final linear (batch, heads, num_query, d_k)
+        #                                            =>(batch, num_query, d_embedding)
         x = x.transpose(1,2).contiguous().view(batch_size, -1, self.head*self.d_k)
         return self.linears[-1](x)
 
