@@ -4,8 +4,13 @@ import torch.nn.functional as F
 
 class PositionwiseFeedForward(nn.Module):
     def __init__(self, d_embedding, d_ff, dropout=0.1):
+        # d_embedding = 512, d_ff = 2048
         super(PositionwiseFeedForward, self).__init__()
+        # Construct the first fully connection layer, 
+        # weights: (d_embedding, d_ff), biases: (d_ff)
         self.w_1 = nn.Linear(d_embedding, d_ff)
+        # Construct the second fully connection layer, 
+        # weights: (d_ff, d_embedding), biases: (d_embedding)
         self.w_2 = nn.Linear(d_ff, d_embedding)
         self.relu = nn.ReLU()
         self.dropout = nn.Dropout(p=dropout)
@@ -13,10 +18,12 @@ class PositionwiseFeedForward(nn.Module):
     def forward(self, x):
         x = self.w_1(x)
         #print('shape after first linear layer: {}'.format(x.shape))
-        x = self.dropout(self.relu(x))
-        x = self.w_2(x)
 
-        return x
+        return self.w_2(self.dropout(self.relu(x)))
+        # x (batch, num_word, d_embedding) -> self.w_1 -> (batch, num_word, d_ff)
+        # -> relu -> (batch, num_word, d_ff)
+        # -> dropout -> (batch, num_word, d_ff)
+        # -> self.w_2 -> (batch, num_word, d_embedding)
 
 if __name__=='__main__':
     EMBEDDING_DIM = 512  # Embedding Size
