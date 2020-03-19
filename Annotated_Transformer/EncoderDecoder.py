@@ -21,8 +21,13 @@ class EncoderDecoder(nn.Module):
 
 class Generator(nn.Module):
     def __init__(self, d_embedding, vocab):
+        # d_embedding = 512
+        # vocab: tgt_vocab_size
         super(Generator, self).__init__()
         self.proj = nn.Linear(d_embedding, vocab)
 
     def forward(self, x):
         return self.proj(x).softmax(-1)
+        # x: (batch, num_word, d_embedding)
+        # -> proj(fc): (batch, num_word, trg_vocab_size)
+        # implement log_soft_max at the last dimension: (batch, num_word, trg_vocab_size)
