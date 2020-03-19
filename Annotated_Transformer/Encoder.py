@@ -52,17 +52,18 @@ class EncoderLayer(nn.Module):
 
 class Encoder(nn.Module):
     def __init__(self, layer, N):
-        # layer = one EncoderLayer object, N=6
+        # layer: one EncoderLayer object, N=6
         super(Encoder, self).__init__()
         self.layers = clones(layer, N)
         self.norm = nn.LayerNorm(layer.size)
+        # initialize a nn.LayerNorm
 
     def forward(self, x, mask):
         # x: (batch, num_word, d_embedding)
         # mask: (batch, num_word, num_word), padding mask in Encoder
         for layer in self.layers:
             x = layer(x, mask)
-            # implement six times EnconderLayer operations
+            # implement six times EncoderLayer
         return self.norm(x)
         # apply LayerNorm after six EncoderLayers: (batch, num_word, d_embedding)
 
