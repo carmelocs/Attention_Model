@@ -40,7 +40,7 @@ class MultiHeadAttention(nn.Module):
 
 if __name__=='__main__':
     EMBEDDING_DIM = 512  # Embedding Size
-    DIM_FF = 2048 # FeedForward dimension
+    DIM_FF = 2048 # FeedForward hidden layer dimension
     DIM_Q = DIM_K = DIM_V = 64  # dimension of K(=Q), V
     NUM_LAYER = 6  # number of Encoder and Decoder Layer
     NUM_HEAD = 8  # number of heads in Multi-Head Attention

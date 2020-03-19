@@ -27,7 +27,7 @@ class PositionwiseFeedForward(nn.Module):
 
 if __name__=='__main__':
     EMBEDDING_DIM = 512  # Embedding Size
-    DIM_FF = 2048 # FeedForward dimension
+    DIM_FF = 2048 # FeedForward hidden layer dimension
     EXPECTED_MAX_NUM_WORD = 100 # ???
     BATCH_SIZE = 32
 
